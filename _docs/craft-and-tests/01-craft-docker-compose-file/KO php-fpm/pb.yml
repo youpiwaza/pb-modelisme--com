@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  web:
+    image: nginx:alpine
+    networks:
+      - wordpress
+    ports:
+      - '8080:80'
+    volumes:
+      # Replace nginx default conf with blank file to prevent localhost:80 conflict
+      - type: bind
+        source: ./config/nginx1.17.6-alpine/etc/nginx/conf.d/default.conf
+        target: /etc/nginx/conf.d/default.conf
+      # Config override
+      # Automatically loaded thanks to default nginx.conf > 'include /etc/nginx/conf.d/*.conf;'
+      - type: bind
+        source: ./config/nginx1.17.6-alpine/etc/nginx/conf.d/site.conf
+        target: /etc/nginx/conf.d/site.conf
+  
+  phpfpm:
+    image: php:fpm
+    networks:
+      - wordpress
+    # volumes:
+      # Project files, bind mount for dev
+      # Php-fpm needs access to sources files too, else he can't access them due to containerisation
+      # - type: bind
+      #   source: ./src
+      #   target: /var/www/html
+    volumes:
+        - volume_wordpress:/var/www/html
+  db:
+    environment:
+      MYSQL_DATABASE: exampledb
+      #MYSQL_ROOT_PASSWORD: pizza
+      MYSQL_ROOT_PASSWORD: /run/secrets/MYSQL_ROOT_PASSWORD.txt
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+    image: mysql:latest
+    networks:
+      - wordpress
+    restart: always
+    secrets:
+    - MYSQL_ROOT_PASSWORD
+    volumes:
+      - type: bind
+        source: ./config/mysql8.0.18/etc/mysql/my.cnf
+        target: /etc/mysql/my.cnf
+      # Automatically loaded thanks to default my.cnf > '!includedir /etc/mysql/conf.d/'
+      - type: bind
+        source: ./config/mysql8.0.18/etc/mysql/conf.d/my-conf.cnf
+        target: /etc/mysql/conf.d/my-conf.cnf
+      - type: volume
+        source: volume_db
+        target: /var/lib/mysql
+  
+  adminer:
+    environment:
+      ADMINER_DESIGN: 'nette'
+    image: 'adminer:fastcgi'
+    networks:
+      - wordpress
+    ports:
+      # Running on port 8081 as 8080 is already used by web
+      - 8081:8080
+
+  wordpress:
+    image: wordpress:beta-6.0-RC4-php8.1-fpm-alpine
+    restart: always
+    # ports:
+    #   - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+    networks:
+      - wordpress
+    volumes:
+      - volume_wordpress:/var/www/html
+      
+networks:
+  wordpress:
+
+secrets:
+  MYSQL_ROOT_PASSWORD:
+    file: ./secrets/mysql/MYSQL_ROOT_PASSWORD.txt
+
+volumes:
+  volume_db:
+  volume_wordpress:
