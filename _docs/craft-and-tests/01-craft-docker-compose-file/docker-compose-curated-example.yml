@@ -1,0 +1,203 @@
+version: '3.7'
+
+# Note: CPU, memory, etc. are not available in compose files v3 for docker-compose, only for services
+#   cf. https://docs.docker.com/compose/compose-file/#resources
+# Same for --pids-limit 200 nowhere to be seen on v3, available in v2
+# Same for --restart=on-failure:5
+
+# Do not go over 2 replicas per service or it keeps shutting down & restarting (network allocation error ?)
+
+services:
+  web:
+    cap_drop:
+      - ALL
+    # cpu_shares: 1024
+    ### Docker stack cure
+    #     https://docs.docker.com/compose/compose-file/#deploy
+    deploy:
+      # Let docker manage container's IP adresses
+      endpoint_mode: vip
+      labels:
+        fr.masamune.client: 'masamune'
+        fr.masamune.maintainer: 'masamune.code@gmail.com'
+        fr.masamune.project: 'curated service nginx'
+        fr.masamune.type: 'test'
+      # Introduced in 3.8
+      # max_replicas_per_node: 5
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      rollback_config:
+        delay: 0s
+        failure_action: pause
+        max_failure_ratio: 0
+        monitor: 0s
+        order: stop-first
+        parallelism: 1
+      update_config:
+        delay: 10s
+        failure_action: pause
+        max_failure_ratio: 0
+        monitor: 0s
+        order: stop-first
+        parallelism: 1
+    healthcheck:
+      test: 'stat /etc/nginx/nginx.conf || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    # latest when writing
+    image: nginx:1.17.6-alpine
+    labels:
+      fr.masamune.client: 'masamune'
+      fr.masamune.maintainer: 'masamune.code@gmail.com'
+      fr.masamune.project: 'curated composed nginx'
+      fr.masamune.type: 'test'
+    # --memory-reservation="128m"
+    # --memory="256m"
+    # --memory-swap -1
+    networks:
+      - network-php
+    # --pids-limit 200
+    ports:
+      - '80:80'
+    security_opt:
+      - no-new-privileges:true
+      - apparmor=docker-default
+      - seccomp=/etc/docker/seccomp-profiles/default-docker-profile.json
+    # Allow access to port 80 for test purpose # Prefer ports > 1024 otherwise
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 0
+    # Assign the_docker_peon unprivileged user
+    user: 1003:1003
+    volumes:
+      - type: bind
+        source: ./src
+        target: /home/www
+        read_only: true
+      # Override default nginx.conf to allow custom docker user
+      - type: bind
+        source: ./config/nginx1.17.6-alpine/etc/nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+      - type: bind
+        source: ./config/nginx1.17.6-alpine/etc/nginx/conf.d/default.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+      - type: bind
+        source: ./config/nginx1.17.6-alpine/etc/nginx/conf.d/site.conf
+        target: /etc/nginx/conf.d/site.conf
+        read_only: true
+    working_dir: /usr/share/nginx/html
+  
+  phpfpm:
+    # TODO: after custom user is set
+    # cap_drop:
+    #   - SETPCAP
+    #   - MKNOD
+    #   - AUDIT_WRITE
+    #   - CHOWN
+    #   - NET_RAW
+    #   - DAC_OVERRIDE
+    #   - FOWNER
+    #   - FSETID
+    #   - KILL
+    #   - SETGID
+    #   - SETUID
+    #   - NET_BIND_SERVICE
+    #   - SYS_CHROOT
+    #   - SETFCAP
+    # cpu_shares: 1024
+    ### Docker stack cure
+    deploy:
+      # Let docker manage container's IP adresses
+      endpoint_mode: vip
+      labels:
+        fr.masamune.client: 'masamune'
+        fr.masamune.maintainer: 'masamune.code@gmail.com'
+        fr.masamune.project: 'curated service php fpm'
+        fr.masamune.type: 'test'
+      # Introduced in 3.8
+      # max_replicas_per_node: 5
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      rollback_config:
+        delay: 0s
+        failure_action: pause
+        max_failure_ratio: 0
+        monitor: 0s
+        order: stop-first
+        parallelism: 1
+      update_config:
+        delay: 10s
+        failure_action: pause
+        max_failure_ratio: 0
+        monitor: 0s
+        order: stop-first
+        parallelism: 1
+    healthcheck:
+      test: 'stat /etc/passwd || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    image: 'php:7.4.1-fpm'
+    labels:
+      fr.masamune.client: 'masamune'
+      fr.masamune.maintainer: 'masamune.code@gmail.com'
+      fr.masamune.project: 'curated composed php fpm'
+      fr.masamune.type: 'test'
+    # --memory-reservation="128m"
+    # --memory="256m"
+    # --memory-swap -1
+    networks:
+      - network-php
+    # --pids-limit 200
+    security_opt:
+      - no-new-privileges:true
+      - apparmor=docker-default
+      - seccomp=/etc/docker/seccomp-profiles/default-docker-profile.json
+    # Allow access to port 80 for test purpose # Prefer ports > 1024 otherwise
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 0
+    # Assign the_docker_peon unprivileged user
+    user: 1003:1003
+    volumes:
+      - type: bind
+        source: ./src
+        target: /home/www
+
+networks:
+  network-php:
+    # Bridge not compatible with docker stack (service)
+    # driver: bridge
+    driver: overlay
+    labels:
+      fr.masamune.client: 'masamune'
+      fr.masamune.maintainer: 'masamune.code@gmail.com'
+      fr.masamune.project: 'test-curated-composed-project'
+      fr.masamune.type: 'test'
