@@ -83,7 +83,9 @@ Local uri : [localhost:8080](http://localhost:8080)
 - ✅💩⬆️ Update WordPRess 6 dispo aujourd'hui
   - 💩 image docker "6.0" toujours en 5.9.3 > upgrade a faire à la classique
   - ✅ Virer le mode debug, trop de pollution deprecated ?
-- Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example)
+- 🚀 Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example)
+  - ✅ Alpha reorder
+  - ✅ Lower table prefix char number
 
 Docs
 
