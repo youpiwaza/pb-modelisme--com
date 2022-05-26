@@ -16,6 +16,11 @@ services:
       retries: 3
       start_period: 0s
     image: mysql:latest
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / mysql'
+      com.pb-modelisme.type: 'local'
     restart: always
     secrets:
       - MYSQL_DATABASE
@@ -34,6 +39,11 @@ services:
       retries: 3
       start_period: 0s
     image: phpmyadmin:latest
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / phpmyadmin'
+      com.pb-modelisme.type: 'local'
     ports:
       ## Access on localhost:8081, 8080 is already taken by web server
       - 8081:80
@@ -54,6 +64,11 @@ services:
       retries: 3
       start_period: 0s
     image: wordpress:6.0.0-php8.1-apache
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / wordpress'
+      com.pb-modelisme.type: 'local'
     ports:
       ## Access on localhost:8080
       - 8080:80
@@ -86,4 +101,3 @@ secrets:
 
 volumes:
   db:
-  wordpress:
