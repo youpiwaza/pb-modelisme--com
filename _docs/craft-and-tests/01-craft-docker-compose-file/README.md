@@ -79,13 +79,16 @@ Local uri : [localhost:8080](http://localhost:8080)
 - ✅ Virer les warnings restants à l'initialisation
   - ✅ No empty root password
   - ❌ `Insecure configuration for --pid-file` > Trop rieng sur le net ni dans la doc > skip
-- Ajouter image phpmyadmin ou adminer
+- ✅ Ajouter image phpmyadmin ou adminer
+- Update WordPRess 6 dispo aujourd'hui
 - Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example).
+- Installation wp avec persistence
 
 Docs
 
 - [dockerhub mysql](https://hub.docker.com/_/mysql)
-- [dockerhub adminer](https://hub.docker.com/_/adminer)
+- [dockerhub phpmyadmin](https://hub.docker.com/_/phpmyadmin)
+  - alternative [dockerhub adminer](https://hub.docker.com/_/adminer)
 
 ```bash
 cd /mnt/c/Users/masam/Documents/_dev/_current/pb-modelisme--com/_docs/craft-and-tests/01-craft-docker-compose-file
@@ -108,6 +111,14 @@ docker system prune -af && \
 docker image prune -af && \
 docker volume rm 01-craft-docker-compose-file_db && \
 docker volume rm 01-craft-docker-compose-file_wordpress
+
+# 🐛 Bug docker credentials can't pull from DC fix
+docker pull wordpress:6.0.0-php8.1-apache && \
+docker pull mysql:latest && \
+docker pull phpmyadmin:latest
 ```
 
-Local uri : [localhost:8080](http://localhost:8080)
+Local uris:
+
+- [wordpress > localhost:8080](http://localhost:8080)
+- [PMA > localhost:8081](http://localhost:8081)
