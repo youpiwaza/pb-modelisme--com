@@ -10,9 +10,14 @@ services:
       - 8080:80
     environment:
       WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: exampleuser
-      WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: exampledb
+      WORDPRESS_DB_NAME_FILE: /run/secrets/MYSQL_DATABASE
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      WORDPRESS_DB_USER_FILE: /run/secrets/MYSQL_USER
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - WORDPRESS_TABLE_PREFIX
     volumes:
       # - wordpress:/var/www/html
       ## Local access to wordpress files
@@ -24,12 +29,15 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_DATABASE: exampledb
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
+      MYSQL_DATABASE_FILE: /run/secrets/MYSQL_DATABASE
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
     secrets:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
       - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
     volumes:
       ## Named volume for database, as we'll access it through phpmyadmin
       - db:/var/lib/mysql
@@ -37,8 +45,16 @@ services:
 ## Not stored in the public repo, only get them in local environnement from private repo
 ## Real file will have all secrets files suffixed by '_secret'
 secrets:
+  MYSQL_DATABASE:
+    file: ./secrets/MYSQL_DATABASE.txt
+  MYSQL_PASSWORD:
+    file: ./secrets/MYSQL_PASSWORD.txt
   MYSQL_ROOT_PASSWORD:
     file: ./secrets/MYSQL_ROOT_PASSWORD.txt
+  MYSQL_USER:
+    file: ./secrets/MYSQL_USER.txt
+  WORDPRESS_TABLE_PREFIX:
+    file: ./secrets/WORDPRESS_TABLE_PREFIX.txt
 
 volumes:
   wordpress:
