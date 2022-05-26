@@ -44,6 +44,13 @@ services:
     volumes:
       ## Named volume for database, as we'll access it through phpmyadmin
       - db:/var/lib/mysql
+  
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      ## Access on localhost:8081, 8080 is already taken by web server
+      - 8081:80
 
 ## Not stored in the public repo, only get them in local environnement from private repo
 ## Real file will have all secrets files suffixed by '_secret'
