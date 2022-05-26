@@ -21,6 +21,8 @@ services:
       com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
       com.pb-modelisme.project: 'curated composed wordpress / mysql'
       com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
     restart: always
     secrets:
       - MYSQL_DATABASE
@@ -44,6 +46,8 @@ services:
       com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
       com.pb-modelisme.project: 'curated composed wordpress / phpmyadmin'
       com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
     ports:
       ## Access on localhost:8081, 8080 is already taken by web server
       - 8081:80
@@ -69,6 +73,8 @@ services:
       com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
       com.pb-modelisme.project: 'curated composed wordpress / wordpress'
       com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
     ports:
       ## Access on localhost:8080
       - 8080:80
@@ -84,6 +90,15 @@ services:
       - source: ./src
         target: /var/www/html
         type: bind
+
+networks:
+  pb-wordpress:
+    driver: bridge
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress'
+      com.pb-modelisme.type: 'local'
 
 ## Not stored in the public repo, only get them in local environnement from private repo
 ## Real file will have all secrets files suffixed by '_secret'
