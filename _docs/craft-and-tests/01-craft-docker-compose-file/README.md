@@ -74,9 +74,11 @@ Local uri : [localhost:8080](http://localhost:8080)
       - Adaptation > quelques tests > pas de perte de temps
   - ✅ images `wordpress:php8.1` & `mysql:latest`
 - ✅ Accès aux fichiers sources en local
-- 🚀 Mots de passes aléatoires gérés via [secrets](https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose)
-  - 🔒️ à passer dans un fichier `_secret` dans le repo dédié
-- Virer les warnings restants à l'initialisation
+- ✅ Mots de passes aléatoires gérés via [secrets](https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose)
+  - ✅ 🔒️ à passer dans un fichier `_secret` dans le repo dédié
+- ✅ Virer les warnings restants à l'initialisation
+  - ✅ No empty root password
+  - ❌ `Insecure configuration for --pid-file` > Trop rieng sur le net ni dans la doc > skip
 - Ajouter image phpmyadmin ou adminer
 - Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example).
 

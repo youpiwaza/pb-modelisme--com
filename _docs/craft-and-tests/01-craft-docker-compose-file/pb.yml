@@ -31,6 +31,7 @@ services:
     image: mysql:latest
     restart: always
     environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: no
       MYSQL_DATABASE_FILE: /run/secrets/MYSQL_DATABASE
       MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
