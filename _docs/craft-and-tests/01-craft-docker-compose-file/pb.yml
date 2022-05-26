@@ -6,6 +6,7 @@ services:
     image: wordpress:php8.1
     restart: always
     ports:
+      ## Access on localhost:8080
       - 8080:80
     environment:
       WORDPRESS_DB_HOST: db
@@ -13,7 +14,11 @@ services:
       WORDPRESS_DB_PASSWORD: examplepass
       WORDPRESS_DB_NAME: exampledb
     volumes:
-      - wordpress:/var/www/html
+      # - wordpress:/var/www/html
+      ## Local access to wordpress files
+      - type: bind
+        source: ./src
+        target: /var/www/html
 
   db:
     image: mysql:latest
@@ -24,6 +29,7 @@ services:
       MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
+      ## Named volume for database, as we'll access it through phpmyadmin
       - db:/var/lib/mysql
 
 volumes:

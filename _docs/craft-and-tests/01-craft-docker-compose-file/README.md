@@ -73,8 +73,8 @@ Local uri : [localhost:8080](http://localhost:8080)
     - Récupération d'un de mes anciens projet de test [nginx + sql + php-fpm + adminer](https://github.com/youpiwaza/server-related-tutorials/tree/master/01-docker/04-my-tests/03-compose-nginx-php-sql)
       - Adaptation > quelques tests > pas de perte de temps
   - ✅ images `wordpress:php8.1` & `mysql:latest`
-- 🚀 Accès aux fichiers sources en local
-- Mots de passes aléatoires
+- ✅ Accès aux fichiers sources en local
+- 🚀 Mots de passes aléatoires
   - 🔒️ à passer dans un fichier `_secret` dans le repo dédié
 - Virer les warnings restants à l'initialisation
 - Ajouter image phpmyadmin ou adminer
