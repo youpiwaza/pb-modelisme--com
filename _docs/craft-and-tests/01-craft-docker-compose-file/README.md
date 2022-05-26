@@ -80,9 +80,10 @@ Local uri : [localhost:8080](http://localhost:8080)
   - ✅ No empty root password
   - ❌ `Insecure configuration for --pid-file` > Trop rieng sur le net ni dans la doc > skip
 - ✅ Ajouter image phpmyadmin ou adminer
-- Update WordPRess 6 dispo aujourd'hui
-- Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example).
-- Installation wp avec persistence
+- ✅💩⬆️ Update WordPRess 6 dispo aujourd'hui
+  - 💩 image docker "6.0" toujours en 5.9.3 > upgrade a faire à la classique
+  - ✅ Virer le mode debug, trop de pollution deprecated ?
+- Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example)
 
 Docs
 
