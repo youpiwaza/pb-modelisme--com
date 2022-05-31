@@ -83,9 +83,14 @@ Local uri : [localhost:8080](http://localhost:8080)
 - ✅💩⬆️ Update WordPRess 6 dispo aujourd'hui
   - 💩 image docker "6.0" toujours en 5.9.3 > upgrade a faire à la classique
   - ✅ Virer le mode debug, trop de pollution deprecated ?
-- 🚀 Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example)
+- ✅ Ajouter les [bonnes pratiques DC](https://github.com/youpiwaza/docker-compose-curated-example)
   - ✅ Alpha reorder
   - ✅ Lower table prefix char number
+  - ✅ Labels
+  - ✅ Dedicated network
+- ✅📌 Tests alakon
+  - ✅ Uploader une image & l'afficher (Permissions fichiers correctes)
+  - ✅ Modifier les permaliens (Modif `.htaccess`)
 
 Docs
 
@@ -95,6 +100,7 @@ Docs
 
 ```bash
 cd /mnt/c/Users/masam/Documents/_dev/_current/pb-modelisme--com/_docs/craft-and-tests/01-craft-docker-compose-file
+
 docker-compose ls
 
 # 🧽 1 liner remove previous installations

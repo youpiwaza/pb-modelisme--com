@@ -29,6 +29,8 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_ROOT_PASSWORD
       - MYSQL_USER
+    security_opt:
+      - no-new-privileges:true
     volumes:
       ## Named volume for database, as we'll access it through phpmyadmin
       - db:/var/lib/mysql
@@ -52,6 +54,8 @@ services:
       ## Access on localhost:8081, 8080 is already taken by web server
       - 8081:80
     restart: always
+    security_opt:
+      - no-new-privileges:true
   
   wordpress:
     environment:
@@ -84,6 +88,8 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_USER
       - WORDPRESS_TABLE_PREFIX
+    security_opt:
+      - no-new-privileges:true
     volumes:
       # - wordpress:/var/www/html
       ## Local access to wordpress files
