@@ -98,6 +98,8 @@ vendor/
 ## 🔒️ Secrets
 # Ignore everywhere any "_secret" suffixed file
 **/*_secret*
+/wordpress/.htaccess
+/wordpress/wp-config.php
 
 ### 🤖 Ansible
 #### Real hosts file
