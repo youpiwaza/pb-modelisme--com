@@ -74,3 +74,59 @@ Local uris:
 
 Note: You'll need to re-install WordPress the first time (or after `db` volume removal),
 or inject the database ; 🚨 all WordPress URIs are flat, with domain name.
+
+### WP-CLI usage
+
+See the [craft documentation for details](../_docs/craft-and-tests/02-local-docker-wp-cli/).
+
+```bash
+# Get container name
+docker ps
+
+# Log into the container
+docker exec                             \
+    -it                                 \
+    --user xfs                          \
+    local_environnement_wordpress-cli_1 \
+    bash
+
+# 🐛👷 In case of bad user/permissions, go in the container & adjust user (if run as non root or something)
+> whoami
+# xfs
+> ls -lah
+# [...]
+# -rwxr--r--    1 1000     1000         561 Jun  1 10:28 .htaccess
+# 💥               ^        ^
+
+docker exec                             \
+    -it                                 \
+    --user 1000:1000                    \
+    local_environnement_wordpress-cli_1 \
+    bash
+> whoami
+# ✅ whoami: unknown uid 1000
+
+# Execute WP-CLI commands
+##      https://developer.wordpress.org/cli/commands/
+
+# Safe test command, no edits : display users
+> wp user list
+
+## Update wp
+> wp core update
+
+## Update translations ~💩 Says ok but isn't updated lol
+> wp language core update
+
+## Install a plugin
+> wp plugin install hello-dolly
+
+## Activate plugin
+> wp plugin activate hello-dolly
+
+## Deactivate plugin
+> wp plugin deactivate hello-dolly
+
+## Delete plugin
+> wp plugin delete hello-dolly
+```

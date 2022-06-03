@@ -97,6 +97,49 @@ services:
       - source: ../wordpress
         target: /var/www/html
         type: bind
+    
+  wordpress-cli:
+    # Trap sleep, waiting for docker exec, instead of classic usage "1 container 1 command"
+    #   wp-cli is running on alpine
+    #     https://stackoverflow.com/questions/31870222/how-can-i-keep-a-container-running-on-kubernetes
+    command: >
+        /bin/sh -c "trap : TERM INT; sleep 9999999999d & wait"
+    depends_on:
+      - db
+      - wordpress
+    environment:
+      HOME: /tmp
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME_FILE: /run/secrets/MYSQL_DATABASE_NAME
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      WORDPRESS_DB_USER_FILE: /run/secrets/MYSQL_USER
+      WORDPRESS_TABLE_PREFIX_FILE: /run/secrets/WORDPRESS_TABLE_PREFIX
+    healthcheck:
+      test: 'stat /etc/alpine-release || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    image: wordpress:cli-2.6.0-php8.1
+    networks:
+      - pb-wordpress
+    secrets:
+      - MYSQL_DATABASE_NAME
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - WORDPRESS_TABLE_PREFIX
+    security_opt:
+      - no-new-privileges:true
+    # Required to run wordpress-cli with the same user-id as wordpress,
+    # when running the cli. This way there are no permission problems
+    # User xfs which also has the user id 33
+    user: xfs
+    volumes:
+      # - wordpress:/var/www/html
+      ## Local access to wordpress files
+      - source: ../wordpress
+        target: /var/www/html
+        type: bind
 
 networks:
   pb-wordpress:
