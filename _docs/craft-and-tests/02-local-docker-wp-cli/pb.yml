@@ -1,0 +1,193 @@
+version: '3.8'
+
+services:
+
+  db:
+    environment:
+      # MYSQL_ALLOW_EMPTY_PASSWORD: no
+      MYSQL_DATABASE_FILE: /run/secrets/MYSQL_DATABASE
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
+    healthcheck:
+      test: 'stat /var/run/mysqld || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    image: mysql:latest
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / mysql'
+      com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
+    restart: always
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      ## Named volume for database, as we'll access it through phpmyadmin
+      - db:/var/lib/mysql
+  
+  phpmyadmin:
+    healthcheck:
+      test: 'stat /var/www/html/index.php || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    image: phpmyadmin:latest
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / phpmyadmin'
+      com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
+    ports:
+      ## Access on localhost:8081, 8080 is already taken by web server
+      - 8081:80
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+  
+  wordpress:
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME_FILE: /run/secrets/MYSQL_DATABASE
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      WORDPRESS_DB_USER_FILE: /run/secrets/MYSQL_USER
+      # WORDPRESS_DEBUG: 1
+      WORDPRESS_TABLE_PREFIX_FILE: /run/secrets/WORDPRESS_TABLE_PREFIX
+    healthcheck:
+      test: 'stat /var/www/html/index.php || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    image: wordpress:6.0.0-php8.1-apache
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / wordpress'
+      com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
+    ports:
+      ## Access on localhost:8080
+      - 8080:80
+    restart: always
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - WORDPRESS_TABLE_PREFIX
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - wordpress:/var/www/html
+      ## Local access to wordpress files
+      # - source: ./src
+      #   target: /var/www/html
+      #   type: bind
+  
+  wordpress-cli:
+    # vstm: The sleep 10 is required so that the command is run after
+    # mysql is initialized. Depending on your machine this might take
+    # longer or it can go faster.
+    # max: 10 isn't enough with first installation, and is weird.
+    # command: >
+    #     /bin/sh -c '
+    #     sleep 20;
+    #     wp core install --path="/var/www/html" --url="http://localhost:8000" --title="Local Wordpress By Docker" --admin_user=admin --admin_password=secret --admin_email=foo@bar.com
+    #     '
+
+    # Better trap sleep, waiting for docker exec
+    #   https://stackoverflow.com/questions/31870222/how-can-i-keep-a-container-running-on-kubernetes
+    #       wp-cli is running on alpine
+    command: >
+        /bin/sh -c "trap : TERM INT; sleep 9999999999d & wait"
+    
+    depends_on:
+      - db
+      - wordpress
+    
+    environment:
+      # Warning: Failed to create directory '/etc/X11/fs/.wp-cli/cache/': mkdir(): Permission denied.
+      #   DH > Running as an arbitrary user
+      #     (possibly also something like -e HOME=/tmp depending on the wp command invoked)
+      # -e HOME=/tmp
+      HOME: /tmp
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME_FILE: /run/secrets/MYSQL_DATABASE
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      WORDPRESS_DB_USER_FILE: /run/secrets/MYSQL_USER
+      WORDPRESS_TABLE_PREFIX_FILE: /run/secrets/WORDPRESS_TABLE_PREFIX
+    
+    healthcheck:
+      test: 'stat /etc/alpine-release || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+
+    image: wordpress:cli-2.6.0-php8.1
+    networks:
+      - pb-wordpress
+    
+    # max: adding env
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - WORDPRESS_TABLE_PREFIX
+
+    security_opt:
+      - no-new-privileges:true
+
+    # vstm: This is required to run wordpress-cli with the same
+    # user-id as wordpress. This way there are no permission problems
+    # when running the cli
+    #    user xfs which also has the user id 33
+    user: xfs
+
+    # vstm: add shared volume
+    volumes:
+      - wordpress:/var/www/html
+      ## Local access to wordpress files
+      # - source: ./src
+      #   target: /var/www/html
+      #   type: bind
+
+networks:
+  pb-wordpress:
+    driver: bridge
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress'
+      com.pb-modelisme.type: 'local'
+
+## Not stored in the public repo, only get them in local environnement from private repo
+## Real file will have all secrets files suffixed by '_secret'
+secrets:
+  MYSQL_DATABASE:
+    file: ./secrets/MYSQL_DATABASE.txt
+  MYSQL_PASSWORD:
+    file: ./secrets/MYSQL_PASSWORD.txt
+  MYSQL_ROOT_PASSWORD:
+    file: ./secrets/MYSQL_ROOT_PASSWORD.txt
+  MYSQL_USER:
+    file: ./secrets/MYSQL_USER.txt
+  WORDPRESS_TABLE_PREFIX:
+    file: ./secrets/WORDPRESS_TABLE_PREFIX.txt
+
+volumes:
+  db:
+  wordpress:
