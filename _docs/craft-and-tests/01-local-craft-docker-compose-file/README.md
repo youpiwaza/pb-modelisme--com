@@ -48,7 +48,7 @@ volumes:
 Doc [docker compose up](https://docs.docker.com/compose/reference/up/)
 
 ```bash
-cd /mnt/c/Users/masam/Documents/_dev/_current/pb-modelisme--com/_docs/craft-and-tests/01-craft-docker-compose-file
+cd /mnt/c/Users/masam/Documents/_dev/_current/pb-modelisme--com/_docs/craft-and-tests/01-local-craft-docker-compose-file
 
 # -f > specify file
 docker-compose -f example.yml up
@@ -57,8 +57,8 @@ docker-compose -f example.yml up
 # 🚨 Mauvais setup de la base de données si les volumes déjà en place > docker volume ls
 docker system prune -af
 docker image prune -af
-docker volume rm 01-craft-docker-compose-file_db
-docker volume rm 01-craft-docker-compose-file_wordpress
+docker volume rm 01-local-craft-docker-compose-file_db
+docker volume rm 01-local-craft-docker-compose-file_wordpress
 ```
 
 Local uri : [localhost:8080](http://localhost:8080)
@@ -99,12 +99,12 @@ Docs
   - alternative [dockerhub adminer](https://hub.docker.com/_/adminer)
 
 ```bash
-cd /mnt/c/Users/masam/Documents/_dev/_current/pb-modelisme--com/_docs/craft-and-tests/01-craft-docker-compose-file
+cd /mnt/c/Users/masam/Documents/_dev/_current/pb-modelisme--com/_docs/craft-and-tests/01-local-craft-docker-compose-file
 
 docker-compose ls
 
 # 🧽 1 liner remove previous installations
-docker-compose -f pb.yml stop && docker-compose -f pb.yml rm && docker volume rm 01-craft-docker-compose-file_db && docker volume rm 01-craft-docker-compose-file_wordpress
+docker-compose -f pb.yml stop && docker-compose -f pb.yml rm && docker volume rm 01-local-craft-docker-compose-file_db && docker volume rm 01-local-craft-docker-compose-file_wordpress
 
 # Interactive, with logs
 docker-compose -f pb.yml up
@@ -118,8 +118,8 @@ docker-compose -f pb.yml stop && docker-compose -f pb.yml rm
 # 🧽 Total clean docker environement
 docker system prune -af && \
 docker image prune -af && \
-docker volume rm 01-craft-docker-compose-file_db && \
-docker volume rm 01-craft-docker-compose-file_wordpress
+docker volume rm 01-local-craft-docker-compose-file_db && \
+docker volume rm 01-local-craft-docker-compose-file_wordpress
 
 # 🐛 Bug docker credentials can't pull from DC fix
 docker pull wordpress:6.0.0-php8.1-apache && \
