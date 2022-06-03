@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+
+  db:
+    environment:
+      # MYSQL_ALLOW_EMPTY_PASSWORD: no
+      MYSQL_DATABASE_FILE: /run/secrets/MYSQL_DATABASE_NAME
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
+    healthcheck:
+      test: 'stat /var/run/mysqld || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    # image: mysql:latest
+    image: mysql:8.0.29
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / mysql'
+      com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
+    restart: always
+    secrets:
+      - MYSQL_DATABASE_NAME
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - db:/var/lib/mysql
+  
+  phpmyadmin:
+    healthcheck:
+      test: 'stat /var/www/html/index.php || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    # image: phpmyadmin:latest
+    image: phpmyadmin:5.2.0
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / phpmyadmin'
+      com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
+    ports:
+      ## Access on localhost:8081, 8080 is already taken by web server
+      - 8081:80
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+  
+  wordpress:
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME_FILE: /run/secrets/MYSQL_DATABASE_NAME
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+      WORDPRESS_DB_USER_FILE: /run/secrets/MYSQL_USER
+      # WORDPRESS_DEBUG: 1
+      WORDPRESS_TABLE_PREFIX_FILE: /run/secrets/WORDPRESS_TABLE_PREFIX
+    healthcheck:
+      test: 'stat /var/www/html/index.php || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 0s
+    image: wordpress:6.0.0-php8.1-apache
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress / wordpress'
+      com.pb-modelisme.type: 'local'
+    networks:
+      - pb-wordpress
+    ports:
+      ## Access on localhost:8080
+      - 8080:80
+    restart: always
+    secrets:
+      - MYSQL_DATABASE_NAME
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - WORDPRESS_TABLE_PREFIX
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      # - wordpress:/var/www/html
+      ## Local access to wordpress files
+      - source: ../wordpress
+        target: /var/www/html
+        type: bind
+
+networks:
+  pb-wordpress:
+    driver: bridge
+    labels:
+      com.pb-modelisme.client: 'masamune'
+      com.pb-modelisme.maintainer: 'masamune.code@gmail.com'
+      com.pb-modelisme.project: 'curated composed wordpress'
+      com.pb-modelisme.type: 'local'
+
+## Not stored in the public repo, only get them in local environnement from private repo
+## Real file will have all secrets files suffixed by '_secret'
+secrets:
+  MYSQL_DATABASE_NAME:
+    file: ./secrets/MYSQL_DATABASE_NAME_secret.txt
+  MYSQL_PASSWORD:
+    file: ./secrets/MYSQL_PASSWORD_secret.txt
+  MYSQL_ROOT_PASSWORD:
+    file: ./secrets/MYSQL_ROOT_PASSWORD_secret.txt
+  MYSQL_USER:
+    file: ./secrets/MYSQL_USER_secret.txt
+  WORDPRESS_TABLE_PREFIX:
+    file: ./secrets/WORDPRESS_TABLE_PREFIX_secret.txt
+
+volumes:
+  # Database will be stored in a persistent named volume
+  #   Remove the need to reinstall each time, and gives access to phpmyadmin
+  #   💡  As in WordPress all uris aren't relative, it's better to import/export
+  #       through wordpressthan "copy/paste" the database
+  db:
+  
+  # WordPress files will be mounter from local machine (this cloned repo > wordpress/ )
+  # wordpress:
