@@ -1,14 +1,14 @@
-# How to work locally
+# 💻 How to work locally
 
 All you need to know about how to setup a local developpment environment for this project.
 
-## Local environment
+## 💻👷 Local environment
 
 For me, it's on Windows > [WSL / Windows Subsystem for Linux](https://docs.microsoft.com/fr-fr/windows/wsl/install) & [docker desktop](https://www.docker.com/products/docker-desktop/).
 
 Cf. my [setup project](https://github.com/youpiwaza/install-dev-env) if you want to get the same setup.
 
-## Docker compose setup
+## 🐳 Docker compose setup
 
 Using a dedicated `docker compose file`, with sensitive informations stored on another repo, using the `_secret` prefix.
 
@@ -69,5 +69,8 @@ docker stats
 
 Local uris:
 
-- [wordpress > localhost:8080](http://localhost:8080)
-- [PMA > localhost:8081](http://localhost:8081)
+- [Wordpress > localhost:8080](http://localhost:8080)
+- [PhpMyAdmin > localhost:8081](http://localhost:8081)
+
+Note: You'll need to re-install WordPress the first time (or after `db` volume removal),
+or inject the database ; 🚨 all WordPress URIs are flat, with domain name.
