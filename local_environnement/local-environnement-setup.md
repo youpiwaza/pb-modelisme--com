@@ -36,6 +36,14 @@ docker-compose -f pb.yml up
 # Detached
 docker-compose -f pb.yml up -d
 
+    # Update wp-content/ ownership from inside the WordPress container (once)
+    docker exec                             \
+        -it                                 \
+        local_environnement_wordpress_1     \
+        bash
+    > chown -R www-data:www-data path/to/wp-content
+    > exit
+
 # Stop
 docker-compose -f pb.yml stop
 
