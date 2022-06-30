@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WordPress - 6.0.x - Development package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-05-23 21:03:15+0000\n"
+"PO-Revision-Date: 2022-06-29 16:32:58+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -284,6 +284,18 @@ msgstr "janvier"
 #, gp-priority: high
 msgid "Uncategorized"
 msgstr "Non classé"
+
+#: wp-includes/option.php:2250
+msgid "The ID of the page that should display the latest posts"
+msgstr "L’ID de la page qui affichera les derniers articles"
+
+#: wp-includes/option.php:2240
+msgid "The ID of the page that should be displayed on the front page"
+msgstr "L’ID de la page qui doit être affiché sur la page d’accueil"
+
+#: wp-includes/option.php:2230
+msgid "What to show on the front page"
+msgstr "Afficher quoi sur la page d’accueil"
 
 #. translators: 1: PHP file name, 2: Version number.
 #: wp-includes/functions.php:5575
@@ -5227,7 +5239,7 @@ msgstr "En réponse à %s."
 msgid "Previous and next months"
 msgstr "Mois précédents et suivants"
 
-#: wp-includes/option.php:2322
+#: wp-includes/option.php:2353
 msgid "When registering an \"array\" setting to show in the REST API, you must specify the schema for each array item in \"show_in_rest.schema.items\"."
 msgstr "Quand vous enregistrez une métadonnée de type « tableau » pour l’afficher dans l’API REST, vous devez spécifier la description de chaque élément du tableau dans « show_in_rest.schema.items »."
 
@@ -5783,7 +5795,7 @@ msgstr "Aperçu du fichier joint"
 msgid "Your browser cannot upload files"
 msgstr "Votre navigateur ne peut pas téléverser de fichiers"
 
-#: wp-includes/class-wp-xmlrpc-server.php:658 wp-includes/option.php:2247
+#: wp-includes/class-wp-xmlrpc-server.php:658 wp-includes/option.php:2278
 msgid "Allow people to submit comments on new posts."
 msgstr "Autoriser les gens à envoyer des commentaires sur les nouvelles publications."
 
@@ -8452,7 +8464,7 @@ msgid "Featured image"
 msgstr "Image mise en avant"
 
 #. translators: 1: $sanitize_callback, 2: register_setting()
-#: wp-includes/option.php:2440
+#: wp-includes/option.php:2471
 msgid "%1$s is deprecated. The callback from %2$s is used instead."
 msgstr "%1$s est obsolète. Le rappel de %2$s est utilisé à la place."
 
@@ -8577,7 +8589,7 @@ msgstr[1] "Votre thème dispose de %s autres zones de widget mais cette page par
 msgid "Your theme has 1 other widget area, but this particular page does not display it."
 msgstr "Votre thème dispose de 1 autre zone de widget mais cette page particulière ne l’affiche pas."
 
-#: wp-includes/option.php:2121
+#: wp-includes/option.php:2122
 msgid "This address is used for admin purposes, like new user notification."
 msgstr "Cette adresse est utilisée à des fins d’administration, comme les notifications de nouveaux comptes."
 
@@ -8772,11 +8784,11 @@ msgstr "La description du fichier joint."
 msgid "The attachment caption."
 msgstr "La légende du fichier joint."
 
-#: wp-includes/option.php:2198
+#: wp-includes/option.php:2199
 msgid "Default post category."
 msgstr "Catégorie d’article par défaut."
 
-#: wp-includes/option.php:2088
+#: wp-includes/option.php:2089
 msgid "Site tagline."
 msgstr "Slogan du site."
 
@@ -10073,50 +10085,50 @@ msgstr "%1$s %2$s, il y a %3$s (%4$s)"
 
 #. translators: %s: misc
 #. translators: %s: privacy
-#: wp-includes/option.php:2335 wp-includes/option.php:2348
-#: wp-includes/option.php:2408 wp-includes/option.php:2421
+#: wp-includes/option.php:2366 wp-includes/option.php:2379
+#: wp-includes/option.php:2439 wp-includes/option.php:2452
 #: wp-admin/includes/template.php:1575 wp-admin/includes/template.php:1588
 #: wp-admin/includes/template.php:1646 wp-admin/includes/template.php:1659
 msgid "The \"%s\" options group has been removed. Use another settings group."
 msgstr "Le groupe d’options « %s » a été supprimé. Utiliser un autre groupe de réglages."
 
-#: wp-includes/option.php:2233
+#: wp-includes/option.php:2264
 msgid "Allow link notifications from other blogs (pingbacks and trackbacks) on new articles."
 msgstr "Autoriser les liens de notification d’autres blogs (pings et rétroliens) sur les nouveaux articles."
 
-#: wp-includes/option.php:2218
+#: wp-includes/option.php:2219
 msgid "Blog pages show at most."
 msgstr "Les pages de blog affichent au maximum."
 
-#: wp-includes/option.php:2208
+#: wp-includes/option.php:2209
 msgid "Default post format."
 msgstr "Format d’article par défaut."
 
-#: wp-includes/option.php:2187
+#: wp-includes/option.php:2188
 msgid "Convert emoticons like :-) and :-P to graphics on display."
 msgstr "Convertir les émoticônes, comme :-) et :-P, en images lors de l’affichage."
 
-#: wp-includes/option.php:2176
+#: wp-includes/option.php:2177
 msgid "WordPress locale code."
 msgstr "Code local de l’installation WordPress."
 
-#: wp-includes/option.php:2164
+#: wp-includes/option.php:2165
 msgid "A day number of the week that the week should start on."
 msgstr "Le numéro du jour de la semaine à laquelle la semaine devrait commencer."
 
-#: wp-includes/option.php:2154
+#: wp-includes/option.php:2155
 msgid "A time format for all time strings."
 msgstr "Un format d’heure commun pour tous les réglages d’heures."
 
-#: wp-includes/option.php:2144
+#: wp-includes/option.php:2145
 msgid "A date format for all date strings."
 msgstr "Un format de date commun pour tous les réglages de dates."
 
-#: wp-includes/option.php:2134
+#: wp-includes/option.php:2135
 msgid "A city in the same timezone as you."
 msgstr "Une ville dans le même fuseau horaire que le vôtre."
 
-#: wp-includes/option.php:2076
+#: wp-includes/option.php:2077
 msgid "Site title."
 msgstr "Titre du site."
 
@@ -15768,7 +15780,7 @@ msgstr "Désolé, vous devez avoir le droit de modifier des articles sur ce site
 msgid "Site Tagline"
 msgstr "Slogan du site"
 
-#: wp-includes/option.php:2104
+#: wp-includes/option.php:2105
 msgid "Site URL."
 msgstr "URL du site."
 
