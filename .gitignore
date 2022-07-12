@@ -6,6 +6,7 @@
 *.tar.bz2
 *.gz
 *.zip
+!_installation_archives/*.zip
 *.bz2
 *.rar
 
