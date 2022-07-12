@@ -10,9 +10,18 @@ stuff
 
 ## Installation
 
-```bash
-stuff
-```
+1. Sur un serveur web disposant d'une base de données, ainsi que des accès..
+   1. Je recommande apache ou Nginx, avec PHP 8+
+   2. HTTPS est indispensable pour les paiements en ligne.
+2. Installer WordPress (version 6.0 lors du dev)
+3. Installer le thème elegantthemes > Divi & l'activer
+4. Installer les plugins suivants
+   1. advanced-custom-fields-pro
+   2. all-in-one-wp-migration
+   3. woocommerce
+5. Récupérer et injecter `wp-content/uploads/`
+6. Récupérer la base de donnée fournie (brute SQL ou via all in one wp migration) et l'injecter
+7. Admin WordPress > Réglages > Permaliens > Enregistrer (afin de régénérer le .htaccess)
 
 ### 🔒️ Sensible informations
 
