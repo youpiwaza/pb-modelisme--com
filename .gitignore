@@ -27,6 +27,11 @@ tmp/
 
 
 
+# 👨‍💻 Local website files
+wordpress/
+
+
+
 # 📄 Logs
 logs/
 *.log
